@@ -198,7 +198,7 @@
 			this.config.container.markbt = this.div;
 		}else{
 			this.div.css({ "left":this.config.x ,"top":this.config.y + 5 , "width": this.config.width  ,"height":this.config.height , 
-				"position":"absolute" , veriticalAlign:'middle' , textAlign:'center'});
+				"position":"absolute" , veriticalAlign:'middle' , textAlign:'center' , cursor: 'pointer'});
 		}
 		
 		this.canvas = $('<canvas/>');
