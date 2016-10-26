@@ -111,13 +111,11 @@
 	
 	$.fn.device = function(options){
 		var defaults = {
-			colors:['#00d3e0','#b89b72','#da8faf','#7a7ed6','#e6bf25','#74c08f','#fb9a70','#00d3e0']
+			colors:['#00d3e0','#b89b72','#da8faf','#7a7ed6','#e6bf25','#74c08f','#fb9a70','#00d3e0'],
+			_n:10
 		};
 		this.config = $.extend(defaults,options);
-		var _n = 10;
-		if ( this.config._n){
-			_n = this.config._n;
-		}
+		var _n = this.config._n;
 		this.div = $('<div/>');
 		this.canvas = $('<canvas/>');
 		
@@ -127,7 +125,7 @@
 			this.config.type = 'icon';
 			this.div.attr("id",this.config.name);
 			//this.div.append(this.config.name);
-			this.div.css({ "left":this.config.data.x - _n ,"top":this.config.data.y - _n , "width": 64 + 2*_n  ,"height":64 + 2*_n , "position":"absolute" });
+			this.div.css({ "left":this.config.data.x - _n ,"top":this.config.data.y - _n , "width": 64 + 2*_n  ,"height":64 + 2*_n , "position":"absolute" , transitionProperty:'height' , transitionDuration : '500' });
 			this.div.appendTo(this.config.image.container);
 			this.canvas.appendTo(this.div);
 			this.g = this.canvas[0].getContext('2d');
@@ -152,10 +150,12 @@
 				this.config.image.container.g.clearRect(0 , 0 , 1024 , 800);
 				this.div.css({backgroundColor: this.config.colors[this.config.data.index] ,opacity:0.2});
 				this.canvas.css({opacity:1});
+				this.div.addClass('ui-flipswitch');
 				this.div.animate({"width": 700  ,"height":84 , "left": 100 , "top": 30 + this.config.data.index * 85 , opacity:0.9} , 1000 );
 			}else{
 				//this.config.image.container.initlink();
 				var _n = 10;
+				this.div.removeClass('ui-flipswitch');
 				this.div.css({backgroundColor: 'Transparent' });
 				this.div.animate({ "left":this.config.data.x - _n ,"top":this.config.data.y - _n , "width": 64 + 2*_n  ,"height":64 + 2*_n , 
 					"position":"absolute" } , 1000 );
@@ -164,7 +164,16 @@
 		
 		this.sort = function(index){
 			if (this.config.type == 'bar'){
-				this.div.animate({"top": 30 + index * 85 } , 1000 );
+				/*if ( this.div.position().top < (30 + index * 85) ){
+					var nn = 30 + index * 85 - this.div.position().top;
+					
+					this.div.animate({"height": 0 ,"top": 30 + index * 85 + nn/2 } , 500 );
+					this.div.animate({"height":84 ,"top": 30 + index * 85 } , 500 );
+				}else{
+					this.div.animate({"height":84 ,"top": 30 + index * 85 } , 1000 );
+				}*/
+				
+				this.div.animate({"height":84 ,"top": 30 + index * 85 } , 1000 );
 			}
 		}
 		return this;
@@ -214,7 +223,7 @@
 						vcontainer.servers[i].transform('icon');
 					}
 					vcontainer.markbt.animate({left:300});
-					setTimeout(initlink , 1100);
+					setTimeout(initlink , 1400);
 					//$(this).oneTime('1s',initlink);
 				}
 			}
@@ -259,7 +268,8 @@ function sort(){
 }
 
 function initlink(){
-	vcontainer.initlink();
+	if ( vcontainer.model = 'topology')
+		vcontainer.initlink();
 }
 
 function getRandoms( totle , length , array ){
